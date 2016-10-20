@@ -1,0 +1,23 @@
+Básicas:
+--------
+-Carga de objeto Quintus
+-Carga de nivel TMX
+-Mario en escena
+-Goomba
+-Bloopa
+-Fin de juego al morir
+-Fin de juego al ganar
+-Menú de inicio
+-Animaciones
+-Monedas
+-Componente para los enemigos
+
+Mejoras:
+--------
+-Cámara sigue a mario dependiendo a donde gire
+-Diseño de nivel (hay que hacerlo en cierto sentido o no puedes ganar)
+-Dos finales (ganas si llegas a la princesa matando a todos y cogiendo todos los powerups y monedas)
+-Cajas de interrogación
+-Seta y Flor
+-Mario grande es vulnerable a los enemigos
+-Sólo Mario pequeño puede matarlos

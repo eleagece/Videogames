@@ -1,0 +1,6 @@
+{
+	"marioFireR":{"sx":0,"sy":0,"tileW":32,"tileH":64,"frames":3},
+	"marioFireL":{"sx":448,"sy":0,"tileW":32,"tileH":64,"frames":3},
+	"marioFireDie":{"sx":384,"sy":0,"tileW":32,"tileH":64,"frames":1},
+	"marioFireJump":{"sx":128,"sy":0,"tileW":32,"tileH":64,"frames":1}
+}

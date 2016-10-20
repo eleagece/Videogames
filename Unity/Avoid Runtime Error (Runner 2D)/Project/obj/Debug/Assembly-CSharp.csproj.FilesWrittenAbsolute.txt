@@ -1,0 +1,17 @@
+/Users/fernandocruzruiz/Documents/Unity/Avoid runtime error/Temp/bin/Debug/Assembly-CSharp.dll.mdb
+/Users/fernandocruzruiz/Documents/Unity/Avoid runtime error/Temp/bin/Debug/Assembly-CSharp.dll
+/Users/fernandocruzruiz/Documents/Unity/Avoid runtime error/obj/Debug/Assembly-CSharp.dll
+/Users/fernandocruzruiz/Documents/Unity/Avoid runtime error/obj/Debug/Assembly-CSharp.dll.mdb
+/Users/fernandocruzruiz/Documents/Unity/Avoid runtime error/Temp/bin/Debug/UnityEngine.dll
+/Users/fernandocruzruiz/Documents/Unity/Avoid runtime error/Temp/bin/Debug/UnityEditor.dll
+/Users/fernandocruzruiz/Documents/Unity/Avoid runtime error/Temp/bin/Debug/UnityEngine.Networking.dll
+/Users/fernandocruzruiz/Documents/Unity/Avoid runtime error/Temp/bin/Debug/UnityEngine.UI.dll
+/Users/fernandocruzruiz/Documents/Unity/Avoid runtime error/Temp/bin/Debug/Mono.Cecil.dll
+/Users/fernandocruzruiz/Documents/Unity/Avoid runtime error/Temp/bin/Debug/Unity.SerializationLogic.dll
+/Users/fernandocruzruiz/Documents/Unity/Avoid runtime error/Temp/bin/Debug/Unity.DataContract.dll
+/Users/fernandocruzruiz/Documents/Unity/Avoid runtime error/Temp/bin/Debug/ICSharpCode.NRefactory.dll
+/Users/fernandocruzruiz/Documents/Unity/Avoid runtime error/Temp/bin/Debug/Unity.UNetWeaver.dll
+/Users/fernandocruzruiz/Documents/Unity/Avoid runtime error/Temp/bin/Debug/Unity.UNetWeaver.dll.mdb
+/Users/fernandocruzruiz/Documents/Unity/Avoid runtime error/Temp/bin/Debug/Unity.CecilTools.dll
+/Users/fernandocruzruiz/Documents/Unity/Avoid runtime error/Temp/bin/Debug/Mono.Cecil.Pdb.dll
+/Users/fernandocruzruiz/Documents/Unity/Avoid runtime error/Temp/bin/Debug/Mono.Cecil.Mdb.dll

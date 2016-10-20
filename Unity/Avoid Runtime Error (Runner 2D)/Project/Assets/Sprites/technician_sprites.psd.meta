@@ -1,0 +1,368 @@
+fileFormatVersion: 2
+guid: 5b10bd833bd12184e81a986063de0ec8
+timeCreated: 1465823558
+licenseType: Free
+TextureImporter:
+  fileIDToRecycleName:
+    21300000: technician_sprites_0
+    21300002: technician_sprites_1
+    21300004: technician_sprites_2
+    21300006: technician_sprites_3
+    21300008: technician_sprites_4
+    21300010: technician_sprites_5
+    21300012: technician_sprites_6
+    21300014: technician_sprites_7
+    21300016: technician_sprites_8
+    21300018: technician_sprites_9
+    21300020: technician_sprites_10
+    21300022: technician_sprites_11
+    21300024: technician_sprites_12
+    21300026: technician_sprites_13
+  serializedVersion: 2
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 1
+    linearTexture: 0
+    correctGamma: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 0
+  cubemapConvolution: 0
+  cubemapConvolutionSteps: 7
+  cubemapConvolutionExponent: 1.5
+  seamlessCubemap: 0
+  textureFormat: -1
+  maxTextureSize: 1024
+  textureSettings:
+    filterMode: -1
+    aniso: 16
+    mipBias: -1
+    wrapMode: 1
+  nPOTScale: 0
+  lightmap: 0
+  rGBM: 0
+  compressionQuality: 50
+  allowsAlphaSplitting: 0
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spritePixelsToUnits: 100
+  alphaIsTransparency: 1
+  textureType: 8
+  buildTargetSettings: []
+  spriteSheet:
+    sprites:
+    - name: technician_sprites_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 261
+        width: 117
+        height: 214
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 29.5, y: -2.5}
+        - {x: 27.5, y: 5.5}
+        - {x: 8.5, y: 52.5}
+        - {x: 4.5, y: 54.5}
+        - {x: -15.5, y: 54.5}
+        - {x: -25.5, y: 37.5}
+        - {x: -29.5, y: -2.5}
+        - {x: -29.5, y: -53.5}
+        - {x: -9.5, y: -53.5}
+        - {x: -8.5, y: -52.5}
+        - {x: -8.5, y: -48.5}
+        - {x: 1.5, y: -53.5}
+        - {x: 29.5, y: -53.5}
+    - name: technician_sprites_1
+      rect:
+        serializedVersion: 2
+        x: 152
+        y: 261
+        width: 141
+        height: 214
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 35.5, y: -17.5}
+        - {x: 35.5, y: 10.5}
+        - {x: 17.5, y: 54.5}
+        - {x: -12.5, y: 54.5}
+        - {x: -16.5, y: 51.5}
+        - {x: -35.5, y: 8.5}
+        - {x: -35.5, y: -53.5}
+        - {x: 35.5, y: -53.5}
+        - {x: 35.5, y: -46.5}
+        - {x: 34.5, y: -45.5}
+    - name: technician_sprites_2
+      rect:
+        serializedVersion: 2
+        x: 321
+        y: 259
+        width: 162
+        height: 205
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -23.5, y: 52}
+        - {x: -38.5, y: -6}
+        - {x: -22.5, y: -14}
+        - {x: -17.5, y: -11}
+        - {x: -11.5, y: -5}
+        - {x: -11.5, y: -1}
+        - {x: -11.5, y: -2}
+        - {x: -10.5, y: -4}
+        - {x: -12.5, y: -6}
+        - {x: -17.5, y: -15}
+        - {x: -40.5, y: -28}
+        - {x: -40.5, y: -50}
+        - {x: -39.5, y: -51}
+        - {x: 41.5, y: -51}
+        - {x: 41.5, y: 35}
+        - {x: 23.5, y: 52}
+    - name: technician_sprites_3
+      rect:
+        serializedVersion: 2
+        x: 501
+        y: 253
+        width: 138
+        height: 219
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 10.5, y: 55.5}
+        - {x: -7.5, y: 55.5}
+        - {x: -15.5, y: 51.5}
+        - {x: -11.5, y: 36.5}
+        - {x: -19.5, y: 18.5}
+        - {x: -34.5, y: -33.5}
+        - {x: -34.5, y: -51.5}
+        - {x: -28.5, y: -54.5}
+        - {x: 35.5, y: -54.5}
+        - {x: 35.5, y: -26.5}
+        - {x: 31.5, y: 15.5}
+    - name: technician_sprites_4
+      rect:
+        serializedVersion: 2
+        x: 671
+        y: 261
+        width: 118
+        height: 214
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 10.5, y: 54.5}
+        - {x: -21.5, y: 54.5}
+        - {x: -29.5, y: -12.5}
+        - {x: -29.5, y: -53.5}
+        - {x: 30.5, y: -53.5}
+        - {x: 30.5, y: -6.5}
+        - {x: 16.5, y: 40.5}
+    - name: technician_sprites_5
+      rect:
+        serializedVersion: 2
+        x: 830
+        y: 247
+        width: 66
+        height: 228
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -13.5, y: 58}
+        - {x: -16.5, y: 57}
+        - {x: -16.5, y: -56}
+        - {x: 15.5, y: -56}
+        - {x: 16.5, y: -53}
+        - {x: 16.5, y: 47}
+        - {x: 10.5, y: 58}
+    - name: technician_sprites_6
+      rect:
+        serializedVersion: 2
+        x: 973
+        y: 269
+        width: 160
+        height: 212
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 40, y: 26}
+        - {x: 24, y: 53}
+        - {x: 22, y: 54}
+        - {x: 7, y: 54}
+        - {x: -2, y: 48}
+        - {x: -40, y: -33}
+        - {x: -40, y: -45}
+        - {x: -37, y: -52}
+        - {x: -36, y: -53}
+        - {x: -11, y: -53}
+        - {x: 36, y: -11}
+        - {x: 41, y: 2}
+        - {x: 41, y: 24}
+    - name: technician_sprites_7
+      rect:
+        serializedVersion: 2
+        x: 1135
+        y: 275
+        width: 218
+        height: 144
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 17.5, y: 37}
+        - {x: -54.5, y: -9}
+        - {x: -54.5, y: -35}
+        - {x: -51.5, y: -36}
+        - {x: 55.5, y: -36}
+        - {x: 55.5, y: 37}
+    - name: technician_sprites_8
+      rect:
+        serializedVersion: 2
+        x: 5
+        y: 0
+        width: 114
+        height: 209
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 25.5, y: -3.5}
+        - {x: 18.5, y: 5.5}
+        - {x: 18.5, y: 52.5}
+        - {x: -17.5, y: 52.5}
+        - {x: -27.5, y: 8.5}
+        - {x: -28.5, y: -1.5}
+        - {x: -28.5, y: -52.5}
+        - {x: 29.5, y: -52.5}
+        - {x: 29.5, y: -10.5}
+        - {x: 28.5, y: -8.5}
+    - name: technician_sprites_9
+      rect:
+        serializedVersion: 2
+        x: 139
+        y: 0
+        width: 144
+        height: 216
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -14, y: 54}
+        - {x: -36, y: -30}
+        - {x: -36, y: -48}
+        - {x: -33, y: -54}
+        - {x: 37, y: -54}
+        - {x: 37, y: 42}
+        - {x: 8, y: 54}
+    - name: technician_sprites_10
+      rect:
+        serializedVersion: 2
+        x: 309
+        y: 19
+        width: 176
+        height: 198
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -37, y: 0.5}
+        - {x: -33, y: -11.5}
+        - {x: -25, y: -10.5}
+        - {x: -44, y: -29.5}
+        - {x: -44, y: -46.5}
+        - {x: -43, y: -49.5}
+        - {x: 38, y: -49.5}
+        - {x: 45, y: -48.5}
+        - {x: 45, y: 21.5}
+        - {x: 44, y: 24.5}
+        - {x: 23, y: 50.5}
+        - {x: -16, y: 50.5}
+        - {x: -19, y: 48.5}
+    - name: technician_sprites_11
+      rect:
+        serializedVersion: 2
+        x: 693
+        y: 0
+        width: 115
+        height: 219
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 17.5, y: 27}
+        - {x: 13.5, y: 26}
+        - {x: 8.5, y: 41}
+        - {x: 0.5, y: 55}
+        - {x: -23.5, y: 55}
+        - {x: -28.5, y: 44}
+        - {x: -28.5, y: -38}
+        - {x: -25.5, y: -55}
+        - {x: 9.5, y: -55}
+        - {x: 29.5, y: 12}
+        - {x: 29.5, y: 27}
+    - name: technician_sprites_12
+      rect:
+        serializedVersion: 2
+        x: 817
+        y: 0
+        width: 114
+        height: 221
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -27.5, y: 55.5}
+        - {x: -28.5, y: 53.5}
+        - {x: -28.5, y: -47.5}
+        - {x: -26.5, y: -55.5}
+        - {x: 9.5, y: -55.5}
+        - {x: 29.5, y: 5.5}
+        - {x: 29.5, y: 30.5}
+        - {x: 0.5, y: 55.5}
+    - name: technician_sprites_13
+      rect:
+        serializedVersion: 2
+        x: 1117
+        y: 115
+        width: 235
+        height: 102
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -44.5, y: 26.5}
+        - {x: -43.5, y: 20.5}
+        - {x: -40.5, y: 17.5}
+        - {x: -58.5, y: -6.5}
+        - {x: -58.5, y: -21.5}
+        - {x: -46.5, y: -25.5}
+        - {x: 50.5, y: -25.5}
+        - {x: 57.5, y: -24.5}
+        - {x: 59.5, y: -20.5}
+        - {x: 59.5, y: 23.5}
+        - {x: 44.5, y: 26.5}
+    outline: []
+  spritePackingTag: 
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
