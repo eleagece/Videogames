@@ -1,0 +1,318 @@
+#pragma hdrstop
+#include "Camara.h"
+#pragma package(smart_init)
+
+//****************************************************************************//
+//*** Constructoras y destructora ********************************************//
+//****************************************************************************//
+Camara::Camara()
+ {
+ //---- Constructora por defecto ---------------------------------------------//
+ //---------------------------------------------------------------------------//
+ // Creación de la cámara y modificación de la matriz de modelado-vista
+ this->eye=new PV3d(0.0,0.0,1.0,1);  // Se inicia el punto 'eye' de la cámara (dónde está)
+ this->look=new PV3d(0.0,0.0,-1.0,1);  // Se inicia el punto 'look' de la cámara (dónde mira)
+ this->up=new PV3d(0.0,1.0,0.0,0);  // Se inicia el vector 'up' de la cámara (como está orientada)
+ initCoordCam();  // Se inician los vectores 'u', 'v' y 'n' para los valores 'eye', 'look' y 'up' por defecto
+ setView();  // Posiciona la cámara para OpenGL usando 'eye', 'look' y 'up'
+ setModelViewMatrix();  // Se carga la matriz de modelado-vista a mano
+ // Creación de la proyección y modificación de la matriz de proyección
+ initProyeccion();  // Inicializa todos los atributos de proyección con valores por defecto
+ setProyeccion();  // Hace una proyección distinta según el valor del atributo 'tipo'
+ }
+
+Camara::Camara(PV3d* eye, PV3d* look, PV3d* up)
+ {
+ //---- Constructora parametrizada -------------------------------------------//
+ //---------------------------------------------------------------------------//
+ // Creación de la cámara y modificación de la matriz de modelado-vista
+ this->eye=eye;  // Se inicia el punto 'eye' de la cámara (dónde está)
+ this->look=look;  // Se inicia el punto 'look' de la cámara (dónde mira)
+ this->up=up;  // Se inicia el vector 'up' de la cámara (como está orientada)
+ initCoordCam();  // Se inician los vectores 'u', 'v' y 'n' para los valores 'eye', 'look' y 'up' por defecto
+ setCoordCam();  // Se modifican los vectores 'u', 'v' y 'n' para los valores 'eye', 'look' y 'up' introducidos por parámetro
+ setView();  // Posiciona la cámara para OpenGL usando 'eye', 'look' y 'up'
+ setModelViewMatrix();  // Se carga la matriz de modelado-vista a mano
+ // Creación de la proyección y modificación de la matriz de proyección
+ initProyeccion();  // Inicializa todos los atributos de proyección con valores por defecto
+ setProyeccion();  // Hace una proyección distinta según el valor del atributo 'tipo'
+ }
+
+Camara::~Camara()
+ {
+ //---- Destructora ----------------------------------------------------------//
+ //---------------------------------------------------------------------------//
+ delete eye;
+ delete look;
+ delete up;
+ delete u;
+ delete v;
+ delete n;
+ }
+
+//****************************************************************************//
+//*** Métodos privados *******************************************************//
+//****************************************************************************//
+void Camara::initCoordCam()
+ {
+ //---- initCoordCam() -------------------------------------------------------//
+ //-- Se modifican los vectores 'u', 'v' y 'n' para los valores 'eye',      --//
+ //-- 'look' y 'up' por defecto                                             --//
+ //---------------------------------------------------------------------------//
+ this->u=new PV3d(1.0,0.0,0.0,0);
+ this->v=new PV3d(0.0,1.0,0.0,0);
+ this->n=new PV3d(0.0,0.0,1.0,0);
+ }
+
+void Camara::setCoordCam()
+ {
+ //---- setCoordCam() --------------------------------------------------------//
+ //-- Se modifican los vectores 'u', 'v' y 'n' para los valores 'eye',      --//
+ //-- 'look' y 'up' almacenados en el objeto                                --//
+ //---------------------------------------------------------------------------//
+ // 'n'='eye'-'look' (sale de eye hacia atrás)
+ n->setX(eye->getX()-look->getX());
+ n->setY(eye->getY()-look->getY());
+ n->setZ(eye->getZ()-look->getZ());
+ n->normalize();  // Se normaliza el vector (modulo=1)
+ // 'u'='up'x'n' (sale de eye hacia la derecha)
+ u->prodV(up,n);
+ u->normalize();  // Se normaliza el vector (modulo=1)
+ // 'v'='n'x'u' (sale hacia arriba)
+ v->prodV(n,u);
+ v->normalize();  // Se normaliza el vector (modulo=1)
+ }
+
+void Camara::initProyeccion()
+ {
+ //---- initProyeccion() -----------------------------------------------------//
+ //-- Inicializa todos los atributos de proyección con valores por defecto. --//
+ //-- La proyección predeterminada es ortogonal                             --//
+ //---------------------------------------------------------------------------//
+ angulo=90.0;
+ ratio=1.0;
+ tipo=ORTO;
+ N=1; F=1000;
+ R=10; L=-R;
+ T=10; B=-T;
+ }
+
+void Camara::setOrtogonal()
+ {
+ //---- setOrtogonal() -------------------------------------------------------//
+ //-- Le dice a OpenGL que desea una proyección ortogonal y los valores de  --//
+ //-- ésta mediante glOrtho(...)                                            --//
+ //---------------------------------------------------------------------------//
+ glMatrixMode(GL_PROJECTION);  // Selección de la matriz de proyección
+ glLoadIdentity();
+ N=1; F=1000;
+ glOrtho(L,R,B,T,N,F);  // Define el cubo de la proyección respecto a 'eye'
+ }
+
+void Camara::setPerspectiva()
+ {
+ //---- setPerspectiva() -----------------------------------------------------//
+ //-- Le dice a OpenGL que desea una proyección perspectiva y los valores   --//
+ //-- de ésta mediante y gluPerspective(...)                               --//
+ //---------------------------------------------------------------------------//
+ glMatrixMode(GL_PROJECTION);
+ glLoadIdentity();
+ N=1; F=100;
+ gluPerspective(angulo,ratio,N,F);  // Da valores a la perspectiva
+ }
+
+void Camara::setOblicua()
+ {
+ //---- setOblicua() ---------------------------------------------------------//
+ //-- Le dice a OpenGL que desea una proyección oblícua y los valores de    --//
+ //-- ésta mediante glOrtho(...) y una postmultiplicación                   --//
+ //---------------------------------------------------------------------------//
+ glMatrixMode(GL_PROJECTION);
+ glLoadIdentity();
+ //N=1; F=-100;
+ glOrtho(L,R,B,T,N,F);  // Valores del prisma/frustum
+ if (/*z!=0 || y!=0 || x!=0*/ z!=0 && (y!=0 && x!=1))  // Postmultiplicación de matriz según el vector oblícuo
+  {
+  GLfloat m[16];
+  m[0]=1.0;  m[1]=0.0;  m[2]=0.0;  m[3]=0.0;
+  m[4]=0.0;  m[5]=1.0;  m[6]=0.0;  m[7]=0.0;
+  m[8]=-(x/z);
+  m[9]=-(y/z);
+  m[10]=1.0; m[11]=0.0;
+  m[12]=0.0; m[13]=0.0; m[14]=0.0; m[15]=1.0;
+  glMultMatrixf(m);  // postmultiplica matriz activa (proyección) por m
+  }
+ }
+
+//****************************************************************************//
+//*** Métodos públicos *******************************************************//
+//****************************************************************************//
+void Camara::setView()
+ {
+ //---- setView() ------------------------------------------------------------//
+ //-- Le dice a OpenGL cómo se debe posicionar la cámara según 'eye',       --//
+ //-- 'look' y 'up' almacenados en el objeto                                --//
+ //---------------------------------------------------------------------------//
+ gluLookAt(eye->getX(),  eye->getY(),  eye->getZ(),
+           look->getX(), look->getY(), look->getZ(),
+           up->getX(),   up->getY(),   up->getZ());
+ }
+
+void Camara::setView(PV3d* eye, PV3d* look, PV3d* up)
+ {
+ //---- setView(PV3d* eye, PV3d* look, PV3d* up) -----------------------------//
+ //-- Le dice a OpenGL cómo se debe posicionar la cámara según 'eye',       --//
+ //-- 'look' y 'up' nuevos. Llama a setModelViewMatrix() para modificar la  --//
+ //-- matriz de modelado vista en consecuencia                              --//
+ //---------------------------------------------------------------------------//
+ delete this->eye;
+ delete this->look;
+ delete this->up;
+ this->eye=eye;
+ this->look=look;
+ this->up=up;
+ setCoordCam();
+ setView();
+ setModelViewMatrix();
+ }
+
+void Camara::setModelViewMatrix()
+ {
+ //---- setModelViewMatrix() -------------------------------------------------//
+ //-- Rellena la matriz GL_MODELVIEW de OpenGL con valores correspondientes --//
+ //-- al sistema de coordenadas de la cámara ('u','v','n','eye')            --//
+ //---------------------------------------------------------------------------//
+ glMatrixMode(GL_MODELVIEW);  // Pone activa la matriz de modelado vista (GL_MODELVIEW)
+ GLfloat m[16];  // Se crea una matriz auxiliar que se rellena pertinentemente
+                 // según el sistema de coordenadas de la cámara
+ m[0]=u->getX();       m[1]=v->getX();       m[2] =n->getX();      m[3] =0.0;
+ m[4]=u->getY();       m[5]=v->getY();       m[6] =n->getY();      m[7] =0.0;
+ m[8]=u->getZ();       m[9]=v->getZ();       m[10]=n->getZ();      m[11]=0.0;
+ m[12]=-(eye->dot(u)); m[13]=-(eye->dot(v)); m[14]=-(eye->dot(n)); m[15]=1.0;
+ glLoadMatrixf(m);  // Se carga la matriz auxiliar m en GL_MODELVIEW
+ }
+
+void Camara::setTipoP(int tipo)
+ {
+ //---- setTipoP(int tipo) ---------------------------------------------------//
+ //-- Establece el valor de 'tipo' para saber cual es la proyección         --//
+ //---------------------------------------------------------------------------//
+ this->tipo=tipo;
+ }
+
+void Camara::setProyeccion()
+ {
+ //---- setProyeccion() ------------------------------------------------------//
+ //-- Ejecuta la proyección según el valor almacenado en 'tipo'             --//
+ //---------------------------------------------------------------------------//
+ switch (tipo)
+  {
+  case ORTO:
+   setOrtogonal();
+   break;
+  case PERS:
+   setPerspectiva();
+   break;
+  case OBLI:
+   setOblicua();
+   break;
+  }
+ }
+
+void Camara::setLimits(double xLeft, double xRight, double yBot, double yTop, double N, double F)
+ {
+ //---- setProyeccion(...) ---------------------------------------------------//
+ //-- Establece los límites del prisma/frustum de proyección                --//
+ //---------------------------------------------------------------------------//
+ L=xLeft;
+ R=xRight;
+ B=yBot;
+ T=yTop;
+ this->N=N;
+ this->F=F;
+ }
+
+void Camara::setParamPers(double a, double p)
+ {
+ //---- setParamPers(...) ----------------------------------------------------//
+ //-- Establece el ángulo y el ratio para la proyección perspectiva         --//
+ //---------------------------------------------------------------------------//
+ this->angulo=a;
+ this->ratio=p;
+ }
+
+void Camara::setVO(float x, float y, float z)
+ {
+ //---- setVO(...) -----------------------------------------------------------//
+ //-- Establece el vector oblícuo para la proyección perspectiva oblícua    --//
+ //---------------------------------------------------------------------------//
+ this->x=x;
+ this->y=y;
+ this->z=z;
+ }
+
+void Camara::roll(double a)
+ {
+ //---- roll(double a) -------------------------------------------------------//
+ //-- Rota la cámara 'a' grados respecto al eje 'n'                         --//
+ //---------------------------------------------------------------------------//
+ double r=a*M_PI/180.0;  // Ángulo 'a' en radianes
+ // Ajustamos 'u', 'v' según las ecuaciones del giro de roll sobre 'n'
+ u->setX(u->getX()*cos(r) + v->getX()*sin(r));
+ u->setY(u->getY()*cos(r) + v->getY()*sin(r));
+ u->setZ(u->getZ()*cos(r) + v->getZ()*sin(r));
+ v->setX(v->getX()*cos(r) - u->getX()*sin(r));
+ v->setY(v->getY()*cos(r) - u->getY()*sin(r));
+ v->setZ(v->getZ()*cos(r) - u->getZ()*sin(r));
+ setModelViewMatrix();  // Se recalcula la matriz de modelado-vista y se carga
+ }
+
+void Camara::pitch(double a)
+ {
+ //---- pitch(double a) ------------------------------------------------------//
+ //-- Rota la cámara 'a' grados respecto al eje 'u'                         --//
+ //---------------------------------------------------------------------------//
+ double r=a*M_PI/180.0;  // Ángulo 'a' en radianes
+ // Ajustamos 'v', 'n' según las ecuaciones del giro de pitch sobre 'u'
+ v->setX(v->getX()*cos(r) + n->getX()*sin(r));
+ v->setY(v->getY()*cos(r) + n->getY()*sin(r));
+ v->setZ(v->getZ()*cos(r) + n->getZ()*sin(r));
+ n->setX(n->getX()*cos(r) - v->getX()*sin(r));
+ n->setY(n->getY()*cos(r) - v->getY()*sin(r));
+ n->setZ(n->getZ()*cos(r) - v->getZ()*sin(r));
+ setModelViewMatrix();  // Se recalcula la matriz de modelado-vista y se carga
+ }
+
+void Camara::yaw(double a)
+ {
+ //---- yaw(double a) --------------------------------------------------------//
+ //-- Rota la cámara 'a' grados respecto al eje 'v'                         --//
+ //---------------------------------------------------------------------------//
+ double r=a*M_PI/180.0;  // Ángulo 'a' en radianes
+ // Ajustamos 'n', 'u' según las ecuaciones del giro de yaw sobre 'v'
+ n->setX(n->getX()*cos(r) + u->getX()*sin(r));
+ n->setY(n->getY()*cos(r) + u->getY()*sin(r));
+ n->setZ(n->getZ()*cos(r) + u->getZ()*sin(r));
+ u->setX(u->getX()*cos(r) - n->getX()*sin(r));
+ u->setY(u->getY()*cos(r) - n->getY()*sin(r));
+ u->setZ(u->getZ()*cos(r) - n->getZ()*sin(r));
+ setModelViewMatrix();  // Se recalcula la matriz de modelado-vista y se carga
+ }
+
+void Camara::desplazamiento(double x, double y, double z)
+ {
+ //---- desplazamiento(...) --------------------------------------------------//
+ //-- Mueve el 'eye' de la cámara en el espacio                             --//
+ //---------------------------------------------------------------------------//
+ // Calculamos el desplazamiento para los valores de 'eye'
+ double dx=u->getX()*x + v->getX()*y + n->getX()*z;
+ double dy=u->getY()*x + v->getY()*y + n->getY()*z;
+ double dz=u->getZ()*x + v->getZ()*y + n->getZ()*z;
+ eye->setX(eye->getX()+dx);  // Sumamos los desplazamientos
+ eye->setY(eye->getY()+dy);
+ eye->setZ(eye->getZ()+dz);
+ setModelViewMatrix();  // Se recalcula la matriz de modelado-vista y se carga
+ }
+
+
+

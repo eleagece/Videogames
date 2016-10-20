@@ -1,0 +1,65 @@
+#include <vcl.h>
+#pragma hdrstop
+#include "Lapiz.h"
+#include <math>
+#include <gl\gl.h>
+#include <gl\glu.h>
+
+// Constructor, destructor
+Lapiz::Lapiz(PuntoVector* pos, float dir)
+ {
+ this->pos=pos;
+ this->dir=dir*(M_PI/180.0);
+ }
+
+Lapiz::~Lapiz()
+ {
+ //delete pos;
+ }
+
+// Getters y setters
+PuntoVector* Lapiz::DamePos()
+ {
+ return pos;
+ }
+
+void Lapiz::PonPos(PuntoVector* pos)
+ {
+ this->pos=pos;
+ }
+
+float Lapiz::DameDir()
+ {
+ return (dir*180.0)/M_PI;
+ }
+
+void Lapiz::PonDir(float dir)
+ {
+ this->dir=dir*(M_PI/180.0);
+ }
+
+// Métodos
+void Lapiz::Girar(float ang)
+ {
+ // Efectúa un giro de ang grados con respecto a la dirección actual.
+ // Para ángulos positivos gira a la izquierda, para negativos a la derecha.
+ dir=dir+ang*(M_PI/180.0);
+ }
+
+PuntoVector* Lapiz::Mover(float dist, bool pintar)
+ {
+ float x=pos->dameX()+(dist*cos(dir));  // Avanza de posición según el ángulo, obteniendo coordenadas de destino
+ float y=pos->dameY()+(dist*sin(dir));
+ if (pintar)  // Sólo pinta si se lo indicamos
+  {
+  glBegin(GL_LINES);
+   glVertex2f(pos->dameX(),pos->dameY());
+   glVertex2f(x,y);
+  glEnd();
+  }
+ pos->ponX(x);
+ pos->ponY(y);
+ return pos;  // Devuelve el puntero al punto de destino
+ }
+
+#pragma package(smart_init)

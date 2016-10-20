@@ -1,0 +1,93 @@
+/*//---------------------------------------------------------------------------
+#ifndef PV3dH
+#define PV3dH
+// Include ------------------------------------------------------------------
+#include <math.h>
+#include <vcl.h>
+#include <gl\gl.h>
+#include <gl\glu.h>
+//---------------------------------------------------------------------------
+// Tipos --------------------------------------------------------------------
+//---------------------------------------------------------------------------
+// clases -------------------------------------------------------------------
+// Representa un punto vector en openGL (3 dimensiones)
+class PV3d
+{
+private:	// User declarations
+        // Coordenadas del punto
+        double _x,_y,_z;
+        // Coordenada extendida. 1: punto, 0: vector.
+        int _ext;
+
+public:		// User declarations
+        // Constructora: inicializa las coordenadas
+        PV3d(double,double,double,int);
+        PV3d(PV3d*);
+
+        // Gets & Sets
+        double getX(){return _x;}
+        double getY(){return _y;}
+        double getZ(){return _z;}
+        double getExt(){return _ext;}
+        void setX(double x){_x=x;}
+        void setY(double y){_y=y;}
+        void setZ(double z){_z=z;}
+        void setExt(double ext){_ext=ext;}
+
+        // Realiza el producto escalar con w
+        double dot(PV3d* w);
+        // Devuelve el módulo del vector
+        double module();
+        // Devuelve el ángulo que forma con w (en grados)
+        double alpha(PV3d* w);
+        // Normaliza el vector
+        void normalize();
+        // Establece las coordenadas del vector según el resultado de a x b
+        void prodV(PV3d* a, PV3d* b);
+        // Dibuja el punto con tamaño y color especificado
+        void dibuja(GLdouble tam,GLfloat R,GLfloat G,GLfloat B);
+        //
+        void dibuja();
+
+};
+//---------------------------------------------------------------------------
+#endif */
+
+#ifndef PV3dH
+#define PV3dH
+#include <math.h>
+#include <vcl.h>
+#include <gl\gl.h>
+#include <gl\glu.h>
+
+class PV3d
+ {
+ private:
+  // Atributos
+  double _x,_y,_z;  // Coordenadas
+  int _ext;  // 1 punto, 0 vector
+
+ public:
+  // Constructoras y destructora
+  PV3d(double,double,double,int);
+  PV3d(PV3d*);
+  // Métodos públicos
+  double getX() {return _x;}
+  double getY() {return _y;}
+  double getZ() {return _z;}
+  double getExt() {return _ext;}
+  void setX(double x) {_x=x;}
+  void setY(double y) {_y=y;}
+  void setZ(double z) {_z=z;}
+  void setExt(double ext) {_ext=ext;}
+  double dot(PV3d* w);  // Realiza el producto escalar con del vector actual con el vector w
+  void normalize();  // Normaliza el vector (lo pone a módulo=1)
+  void prodV(PV3d* a,PV3d* b);  // Establece las coordenadas del vector según el resultado de a x b
+  PV3d* prodVect(PV3d* w);  // Realiza el producto vectorial del vector actual con el vector w y lo devuelve
+  double module();  // Devuelve el módulo del vector actual
+  double alpha(PV3d* w);  // Devuelve el ángulo que forma el vector actual con el vector w (en grados)
+  void dibuja(GLdouble tam,GLfloat R,GLfloat G,GLfloat B);  // Dibuja el punto con tamaño y color especificado
+  void dibuja();
+ };
+
+#endif

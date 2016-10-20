@@ -1,0 +1,495 @@
+#include <vcl.h>
+#pragma hdrstop
+
+#include "UFP.h"
+// Mis includes
+#include <math.h>  // Para sin y cos
+#include <time.h>  // Para clock
+#include <stdio.h>  // Para clock
+#include <dos.h>  // Para clock
+#include <windows.h>  // Para sleep
+#include <sstream>
+
+
+//---------------------------------------------------------------------------
+#pragma package(smart_init)
+#pragma resource "*.dfm"
+TGLForm2D *GLForm2D;
+//---------------------------------------------------------------------------
+__fastcall TGLForm2D::TGLForm2D(TComponent* Owner)
+        : TForm(Owner)
+{
+}
+//---------------------------------------------------------------------------
+void __fastcall TGLForm2D::FormCreate(TObject *Sender)
+ {
+ hdc = GetDC(Handle);
+ SetPixelFormatDescriptor();
+ hrc = wglCreateContext(hdc);
+ if(hrc == NULL)
+  {
+  ShowMessage(":-)~ hrc == NULL");
+  }
+ if(wglMakeCurrent(hdc, hrc) == false)
+  {
+  ShowMessage("Could not MakeCurrent");
+  }
+ glClearColor(0.0f, 0.0f, 0.0f, 1.0f);  // Color de fondo de la ventana (negro)
+ //inicialización del volumen de vista
+ xRight=200.0; xLeft=-xRight;
+ yTop=xRight; yBot=-yTop;
+ //Radio del volumen de vista == 1
+ //inicialización del puerto de vista
+ //ClientWidth=400;
+ //ClientHeight=400;
+ RatioViewPort=1.0;
+ // inicialización de las variables del programa
+ segmentosVueltaDefault=20;
+ columnasTiling=0;
+ hipoA=170;
+ hipoB=56;
+ hipoC=80;
+ }
+//---------------------------------------------------------------------------
+void __fastcall TGLForm2D::SetPixelFormatDescriptor()
+{
+    PIXELFORMATDESCRIPTOR pfd = {
+    	sizeof(PIXELFORMATDESCRIPTOR),
+        1,
+        PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER,
+        PFD_TYPE_RGBA,
+        32,
+        0,0,0,0,0,0,
+        0,0,
+        0,0,0,0,0,
+        32,
+        0,
+        0,
+        PFD_MAIN_PLANE,
+        0,
+        0,0,0
+    };
+    int PixelFormat = ChoosePixelFormat(hdc, &pfd);
+    SetPixelFormat(hdc, PixelFormat, &pfd);
+}
+//---------------------------------------------------------------------
+void __fastcall TGLForm2D::FormResize(TObject *Sender)
+ {
+ // Establecimiento de "PUERTO DE VISTA" (view port, ventana)
+ if ((ClientWidth<=1)||(ClientHeight<=1))  // Si se hace un resize con ancho o largo menor de 1 pixel
+  {
+  ClientWidth=400;  // Tamaño 400x400
+  ClientHeight=400;
+  RatioViewPort=1.0;  // Ratio 1.0
+  }
+ else  // Si se hace un resize con ancho o largo mayor de 1 pixel
+  {
+  RatioViewPort=(float)ClientWidth/(float)ClientHeight;  // Tamaño ClientWidth*ClientHeight, Ratio nuevo
+  }
+ glViewport(0,0,ClientWidth,ClientHeight);  // Establece el "puerto de vista" según los nuevos datos
+
+ // Establecimiento de "ÁREA VISIBLE DE LA ESCENA" (volumen de vista)
+ GLfloat RatioVolVista=xRight/yTop;  // Ratio del volumen de vista
+ float centroXOld,centroYOld;
+ centroXOld=(xRight+xLeft)/2;  // Se obtienen las posiciones del centro antiguo. En nuestro sistema de coordenadas será 0,0
+ centroYOld=(yTop+yBot)/2;  // antes y después del resize, aunque se hace genérico para otros sistemas de coordenadas posibles.
+ float nuevoAncho,nuevoAlto;
+ if (RatioVolVista>=RatioViewPort)  // Hemos disminuido el ancho o hemos aumentado el alto del puerto de vista
+  {                                 // lo que implica calcular un nuevo alto
+  nuevoAlto=(xRight-xLeft)/RatioViewPort;  // Nuevo alto
+  yTop=(nuevoAlto/2)+centroYOld;  // nuevo yTop, yBot
+  yBot=centroYOld-(nuevoAlto/2);
+  }
+ else  // Hemos disminuido el alto o hemos aumentado el ancho del puerto de vista
+  {    // lo que implica calcular un nuevo ancho
+  nuevoAncho=(yTop-yBot)*RatioViewPort;  // Nuevo ancho
+  xRight=(nuevoAncho/2)+centroXOld;  // Nuevos límites
+  xLeft=centroXOld-(nuevoAncho/2);
+  }
+ glMatrixMode(GL_PROJECTION);
+ glLoadIdentity();
+ gluOrtho2D(xLeft,xRight,yBot,yTop);  // Establece el "área visible de la escena" según los nuevos datos
+
+ glMatrixMode(GL_MODELVIEW);
+ glLoadIdentity();
+ GLScene();
+ }
+
+//---------------------------------------------------------------------------
+int TGLForm2D::MCD(int u, int v)
+ {
+ while (u>0)
+  {
+  if (u<v)
+   {
+   int temp;
+   temp=u;
+   u=v;
+   v=temp;
+   }
+  u=u-v;
+  }
+ return v;
+ }
+
+//---------------------------------------------------------------------------
+void TGLForm2D::SeleccionaColor(int selec)
+ {
+ int selecMod=selec%7;
+ switch (selecMod)
+  {
+  case 0:
+   glColor3f(0,1,0);  // Verde
+   break;
+  case 1:
+   glColor3f(1,1,0);  // Amarillo
+   break;
+  case 2:
+   glColor3f(0,1,1);  // Cyan
+   break;
+  case 3:
+   glColor3f(1,0,0);  // Rojo
+   break;
+  case 4:
+   glColor3f(0,0,1);  // Azul
+   break;
+  case 5:
+   glColor3f(1,0,1);  // Magenta
+   break;
+  case 6:
+   glColor3f(1,1,1);  // Blanco
+   break;
+  }
+ }
+//---------------------------------------------------------------------------
+void TGLForm2D::PintaHipotrocoide(float a, float b, float c, int segmentosVuelta)
+ {
+ float x, y;
+ int numVueltas=b/MCD(a,b);  // Número de vueltas totales
+ int segmentosTotal=numVueltas*segmentosVuelta;  // Número de segmentos de todas las vueltas
+ glBegin(GL_LINE_STRIP);
+  for (int t=0; t<=segmentosTotal; t++)
+   {
+   x=((a-b)*cos(t*2*M_PI/segmentosVuelta))+(c*cos((t*2*M_PI/segmentosVuelta)*((a-b)/b)));
+   y=((a-b)*sin(t*2*M_PI/segmentosVuelta))-(c*sin((t*2*M_PI/segmentosVuelta)*((a-b)/b)));
+   glVertex2f(x,y);
+   if (Colores1->Checked)
+    {
+    SeleccionaColor(t);
+    }
+   }
+  glColor3f(1,1,1);  // Para que siempre se quede el blanco como color predeterminado
+ glEnd();
+ }
+
+//---------------------------------------------------------------------------
+void TGLForm2D::Espera(float segundos)
+ {
+ clock_t tiempoLimite;
+ tiempoLimite=clock()+segundos*CLK_TCK;  // Calcula el tiempo actual más los segundos que le pases
+ while (clock()<tiempoLimite)  // Espera que el tiempo actual sea el que habías calculado antes
+  {
+  // Programa parado
+  }
+ }
+
+//---------------------------------------------------------------------------
+void TGLForm2D::PintaHipotrocoideAnimado(float a, float b, float c, int segmentosVuelta)
+ {
+ float x, y, v, w;
+ int numVueltas=b/MCD(a,b);  // Número de vueltas totales
+ int segmentosTotal=numVueltas*segmentosVuelta;  // Número de segmentos de todas las vueltas
+ for (int t=0; t<=segmentosTotal; t++)
+  {
+  x=((a-b)*cos(t*2*M_PI/segmentosVuelta))+(c*cos(t*2*M_PI/segmentosVuelta*((a-b)/b)));
+  y=((a-b)*sin(t*2*M_PI/segmentosVuelta))-(c*sin(t*2*M_PI/segmentosVuelta*((a-b)/b)));
+  if (t==0)  // Primera iteración para guardar el primer punto
+   {
+   v=x; w=y;
+   }
+  else
+   {
+   glBegin(GL_LINES);
+    glVertex2f(v,w);
+    if (Colores1->Checked)
+     {
+     SeleccionaColor(t);
+     }
+    glVertex2f(x,y);
+   glEnd();
+   v=x; w=y;
+   Espera(0.001);
+   SwapBuffers(hdc);
+   }
+  }
+ glColor3f(1,1,1);  // Para que siempre se quede el blanco como color predeterminado
+ }
+
+//---------------------------------------------------------------------------
+void TGLForm2D::PintaCentro()
+ {
+ glColor3f(0,0,1);  // Punto de color azul
+ glPointSize(4.0);
+ glBegin(GL_POINTS);
+  glVertex2d((xRight+xLeft)/2,(yTop+yBot)/2);  // Pinta el pixel de tamaño 4 en el centro
+ glEnd();
+ glPointSize(1.0);  // Para que siempre se quede 1.0 como tamaño predeterminado
+ glColor3f(1,1,1);  // Para que siempre se quede el blanco como color predeterminado
+ }
+
+//---------------------------------------------------------------------------
+void __fastcall TGLForm2D::GLScene()
+ {
+ glClear(GL_COLOR_BUFFER_BIT);
+ if (columnasTiling>0)
+  {
+  int fila, columna;
+  for (int i=0; i<(columnasTiling*columnasTiling); i++)
+   {  // [f,c][0,0],[0,1],[1,0],[1,1] en el caso de haber dos columnas
+   fila=(i/columnasTiling);
+   columna=(i%columnasTiling);
+   glViewport(columna*ClientWidth/columnasTiling,  // Establece el puerto de vista en el que vamos a dibujar, el cual...
+              fila*ClientHeight/columnasTiling,  // ...será un trozo de la ventana, según el número de columnas elegidas
+              ClientWidth/columnasTiling,
+              ClientHeight/columnasTiling);
+   PintaHipotrocoide(hipoA,hipoB,hipoC,segmentosVueltaDefault);
+   }
+  }
+ else
+  {
+  glViewport(0,0,ClientWidth,ClientHeight);  // Restablece el puerto de vista modificado por el Tiling
+  //PintaHipotrocoide(hipoA,hipoB,hipoC,segmentosVueltaDefault);  // Genérico
+  //PintaHipotrocoide(100,60,100,segmentosVueltaDefault);  // Átomo
+  //PintaHipotrocoide(200,100,1,segmentosVueltaDefault);  // Elipse
+  //PintaHipotrocoide(50,27,96,segmentosVueltaDefault);  // Ejemplo de la práctica
+  //PintaHipotrocoide(170,56,80,segmentosVueltaDefault);  // Pinta una flor
+  //PintaHipotrocoideAnimado(170,56,80,segmentosVueltaDefault);  // Pinta una flor (animado)
+  //PintaHipotrocoideAnimado(50,27,96,segmentosVueltaDefault);  // Ejemplo de la prácica (animado)
+  PintaCentro();  // Necesario para las animaciones, si no se pone, no se vería punto central
+  if (Animacin2->Checked)
+   {
+   PintaHipotrocoideAnimado(hipoA,hipoB,hipoC,segmentosVueltaDefault);
+   }
+  else
+   {
+   PintaHipotrocoide(hipoA,hipoB,hipoC,segmentosVueltaDefault);
+   }
+  PintaCentro();  // Para no ser tapado por hipotrocoide
+  }
+ glFlush();
+ SwapBuffers(hdc);
+ }
+
+//---------------------------------------------------------------------------
+void __fastcall TGLForm2D::FormPaint(TObject *Sender)
+ {
+ GLScene();
+ }
+//---------------------------------------------------------------------------
+void __fastcall TGLForm2D::FormDestroy(TObject *Sender)
+{
+    ReleaseDC(Handle,hdc);
+    wglMakeCurrent(NULL, NULL);
+    wglDeleteContext(hrc);
+    // eliminar objetos creados
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TGLForm2D::Precisar1Click(TObject *Sender)
+ {
+ columnasTiling=0;  // No se hace Precisar en Tiling
+ segmentosVueltaDefault=segmentosVueltaDefault+1;
+ // Pintado
+ GLScene();
+ }
+//---------------------------------------------------------------------------
+
+void TGLForm2D::Zoom(float zoom, float& deltaX, float& deltaY)
+ {
+ if (zoom>1)
+  {
+  deltaX=((xRight-xLeft)*zoom)-(xRight-xLeft);  // disminución en las X para hacer más pequeña el área visible de la escena y ver dibujo más grande
+  deltaY=((yTop-yBot)*zoom)-(yTop-yBot);  // disminución en las Y para hacer más pequeña el área visible de la escena y ver dibujo más grande
+  }
+ else if (zoom<1)
+  {
+  deltaX=(xRight-xLeft)-((xRight-xLeft)*zoom);  // aumento en las X para hacer más grande el área visible de la escena y ver dibujo más pequeño
+  deltaY=(yTop-yBot)-((yTop-yBot)*zoom);  // aumento en las Y para hacer más grande el área visible de la escena y ver dibujo más pequeño
+  }
+ else  // zoom==1
+  {
+  deltaX=0;
+  deltaY=0;
+  }
+ }
+//---------------------------------------------------------------------------
+
+void __fastcall TGLForm2D::Acercar1Click(TObject *Sender)
+ {
+ columnasTiling=0;  // No se hace Acercar en Tiling
+ float deltaX,deltaY;  // deltaX,deltaY son la disminución que se aplica a xRight,xLeft,yTop,yBot
+ Zoom(1.1,deltaX,deltaY);  // Procedimiento que devuelve deltaX,deltaY según el zoom que queramos aplicar (1.1 en este caso)
+ // Operaciones de disminución para hacer más pequeña el área visible de la escena y ver dibujo más grande
+ xRight=xRight-deltaX;
+ xLeft=xLeft+deltaX;
+ yTop=yTop-deltaY;
+ yBot=yBot+deltaY;
+ // Restablecimiento del área visible de la escena y pintado
+ glMatrixMode(GL_PROJECTION);
+ glLoadIdentity();
+ gluOrtho2D(xLeft,xRight,yBot,yTop);
+ GLScene();
+ }
+//---------------------------------------------------------------------------
+
+void __fastcall TGLForm2D::Alejar1Click(TObject *Sender)
+ {
+ columnasTiling=0;  // No se hace Alejar en Tiling
+ float deltaX,deltaY;  // deltaX,deltaY son el aumento que se aplica a xRight,xLeft,yTop,yBot
+ Zoom(0.9,deltaX,deltaY);  // Procedimiento que devuelve deltaX,deltaY según el zoom que queramos aplicar (0.9 en este caso)
+ // Operaciones de aumento para hacer más grande el área visible de la escena y ver dibujo más pequeño
+ xRight=xRight+deltaX;
+ xLeft=xLeft-deltaX;
+ yTop=yTop+deltaY;
+ yBot=yBot-deltaY;
+ // Restablecimiento del área visible de la escena y pintado
+ glMatrixMode(GL_PROJECTION);
+ glLoadIdentity();
+ gluOrtho2D(xLeft,xRight,yBot,yTop);
+ GLScene();
+ }
+//---------------------------------------------------------------------------
+
+void __fastcall TGLForm2D::FormKeyDown(TObject *Sender, WORD &Key,
+      TShiftState Shift)
+ {
+ if (Trasladar1->Checked)
+  {
+  float desplazamiento=10;
+  switch (Key)
+   {
+   case 39:  // Tecla derecha
+    xLeft=xLeft+desplazamiento;
+    xRight=xRight+desplazamiento;
+    break;
+   case 40:  // Tecla abajo
+    yTop=yTop-desplazamiento;
+    yBot=yBot-desplazamiento;
+    break;
+   case 37:  // Tecla Izquierda
+    xLeft=xLeft-desplazamiento;
+    xRight=xRight-desplazamiento;
+    break;
+   case 38:  // Arriba
+    yTop=yTop+desplazamiento;
+    yBot=yBot+desplazamiento;
+    break;
+   }
+  // Restablecimiento del área visible de la escena y pintado
+  glMatrixMode(GL_PROJECTION);
+  glLoadIdentity();
+  gluOrtho2D(xLeft,xRight,yBot,yTop);
+  GLScene();
+  }
+ }
+//---------------------------------------------------------------------------
+
+void __fastcall TGLForm2D::Trasladar1Click(TObject *Sender)
+ {
+ columnasTiling=0;  // No se hace Trasladar en Tiling
+ if (!Trasladar1->Checked)
+  {
+  Trasladar1->Checked=true;
+  }
+ else
+  {
+  Trasladar1->Checked=false;
+  }
+ }
+//---------------------------------------------------------------------------
+
+void __fastcall TGLForm2D::Centrar1Click(TObject *Sender)
+ {
+ columnasTiling=0;  // No se hace Centrar en Tiling
+ float ancho=xRight-xLeft;
+ float alto=yTop-yBot;
+ xRight=ancho/2;
+ xLeft=-xRight;
+ yTop=alto/2;
+ yBot=-yTop;
+ // Restablecimiento del área visible de la escena y pintado
+ glMatrixMode(GL_PROJECTION);
+ glLoadIdentity();
+ gluOrtho2D(xLeft,xRight,yBot,yTop);
+ GLScene();
+ }
+//---------------------------------------------------------------------------
+
+void __fastcall TGLForm2D::Tiling1Click(TObject *Sender)
+ {
+ AnsiString columnasAnsi=InputBox("Tiling","Introduce el número de columnas","");
+ int columnasInt=columnasAnsi.ToInt();
+ if (columnasInt<1)
+  {
+  ShowMessage("Valor incorrecto. Introducir entero positivo");
+  }
+ else
+  {
+  Trasladar1->Checked=false;  // Evitar que se pueda trasladar el embaldosado
+  columnasTiling=columnasInt;
+  GLScene();
+  }
+ }
+//---------------------------------------------------------------------------
+
+void __fastcall TGLForm2D::Valores1Click(TObject *Sender)
+ {
+ columnasTiling=0;  // No se dan valores en Tiling
+ AnsiString paramAAnsi,paramBAnsi,paramCAnsi;
+ int paramAInt,paramBInt,paramCInt;
+ paramAAnsi=InputBox("Parámetro A","Introduce el parámetro A","50");
+ paramBAnsi=InputBox("Parámetro B","Introduce el parámetro B","27");
+ paramCAnsi=InputBox("Parámetro C","Introduce el parámetro C","96");
+ paramAInt=paramAAnsi.ToInt();
+ paramBInt=paramBAnsi.ToInt();
+ paramCInt=paramCAnsi.ToInt();
+ if (paramAInt<1 || paramBInt<1 || paramCInt<1 || paramAInt<=paramBInt)
+  {
+  ShowMessage("Error. Introducir enteros positivos siendo A>B");
+  }
+ else
+  {
+  hipoA=paramAInt;
+  hipoB=paramBInt;
+  hipoC=paramCInt;
+  GLScene();
+  }
+ }
+//---------------------------------------------------------------------------
+
+void __fastcall TGLForm2D::Animacin2Click(TObject *Sender)
+ {
+ if (!Animacin2->Checked)
+  {
+  Animacin2->Checked=true;
+  }
+ else
+  {
+  Animacin2->Checked=false;
+  }
+ }
+//---------------------------------------------------------------------------
+
+void __fastcall TGLForm2D::Colores1Click(TObject *Sender)
+ {
+ if (!Colores1->Checked)
+  {
+  Colores1->Checked=true;
+  }
+ else
+  {
+  Colores1->Checked=false;
+  }
+ }
+//---------------------------------------------------------------------------
+

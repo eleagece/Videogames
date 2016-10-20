@@ -1,0 +1,79 @@
+#pragma hdrstop
+#include "TAfin.h"
+#pragma package(smart_init)
+
+//****************************************************************************//
+//*** Constructoras y destructora ********************************************//
+//****************************************************************************//
+TAfin::TAfin()
+ {
+ //---- Constructora por defecto ---------------------------------------------//
+ //-- Llama a reset()                                                       --//
+ //---------------------------------------------------------------------------//
+ reset();
+ }
+
+//****************************************************************************//
+//*** Métodos públicos *******************************************************//
+//****************************************************************************//
+void TAfin::reset()
+ {
+ //---- reset() --------------------------------------------------------------//
+ //-- Carga la matriz identidad                                             --//
+ //---------------------------------------------------------------------------//
+ m[0]=1.0;  m[1]=0.0;  m[2]=0.0;  m[3]=0.0;
+ m[4]=0.0;  m[5]=1.0;  m[6]=0.0;  m[7]=0.0;
+ m[8]=0.0;  m[9]=0.0;  m[10]=1.0; m[11]=0.0;
+ m[12]=0.0; m[13]=0.0; m[14]=0.0; m[15]=1.0;
+ }
+
+void TAfin::ejecutaTAfin()
+ {
+ glMultMatrixf(m);
+ }
+
+void TAfin::postMultiplica(GLfloat mm[])
+ {
+ glPushMatrix();
+  glLoadMatrixf(m);
+  glMultMatrixf(mm);
+  glGetFloatv(GL_MODELVIEW_MATRIX,m);
+ glPopMatrix();
+ }
+
+void TAfin::traslada(float x, float y, float z)
+ {
+ glMatrixMode(GL_MODELVIEW);
+ glPushMatrix();
+  glLoadIdentity();
+  glTranslatef(x,y,z);
+  GLfloat mm[16];
+  glGetFloatv(GL_MODELVIEW_MATRIX,mm);
+ glPopMatrix();
+ postMultiplica(mm);
+ }
+
+void TAfin::escala(float x, float y, float z)
+ {
+ glMatrixMode(GL_MODELVIEW);
+ glPushMatrix();
+  glLoadIdentity();
+  glScalef(x,y,z);
+  GLfloat mm[16];
+  glGetFloatv(GL_MODELVIEW_MATRIX,mm);
+ glPopMatrix();
+ postMultiplica(mm);
+ }
+
+void TAfin::rota(float a, float x, float y, float z)
+ {
+ glMatrixMode(GL_MODELVIEW);
+ glPushMatrix();
+  glLoadIdentity();
+  glRotatef(a,x,y,z);
+  GLfloat mm[16];
+  glGetFloatv(GL_MODELVIEW_MATRIX,mm);
+ glPopMatrix();
+ postMultiplica(mm);
+ }
+

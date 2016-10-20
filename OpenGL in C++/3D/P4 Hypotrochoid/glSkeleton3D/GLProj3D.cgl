@@ -1,0 +1,59 @@
+Functions called:
+ delete (35 times)
+ SysFreeMem (288 times)
+ SysGetMem (288 times)
+ realloc (1 times)
+ memcpy (1 times)
+ delete[] (2 times)
+ free (26 times)
+ new[] (14 times)
+ new (40 times)
+ calloc (5 times)
+ malloc (20 times)
+Resource types used:
+ object array (14 allocs, 13 max)
+ object (40 allocs, 28 max)
+ memory block (314 allocs, 228 max)
+Modules used:
+ 00400000 03/23/2010 02:28:12 C:\Documents and Settings\Luis
+ Alfonso\Escritorio\P4 IGr WIP\glSkeleton3D\GLProj3D.exe
+ 0CD00000 01/31/2000 04:00:00 C:\Archivos de
+ programa\Borland\CBuilder5\Bin\CG32.DLL
+ 32500000 01/31/2000 04:00:00 C:\Archivos de
+ programa\Borland\CBuilder5\Bin\CC3250MT.DLL
+ 40000000 01/24/2000 04:01:00 C:\WINDOWS\system32\VCL50.BPL
+ 41000000 01/31/2000 04:00:00 C:\Archivos de
+ programa\Borland\CBuilder5\Bin\BORLNDMM.DLL
+ 58C30000 04/14/2008 13:00:00 C:\WINDOWS\system32\comctl32.dll
+ 5F120000 04/14/2008 13:00:00 C:\WINDOWS\system32\OPENGL32.dll
+ 5FEA0000 04/14/2008 13:00:00 C:\WINDOWS\system32\GLU32.DLL
+ 69000000 04/28/2005 21:54:00 C:\WINDOWS\system32\atioglxx.dll
+ 71A20000 04/14/2008 13:00:00 C:\WINDOWS\system32\WS2HELP.dll
+ 71A30000 04/14/2008 13:00:00 C:\WINDOWS\system32\WS2_32.dll
+ 71A50000 04/14/2008 13:00:00 C:\WINDOWS\system32\wsock32.dll
+ 71AA0000 04/14/2008 13:00:00 C:\WINDOWS\system32\mpr.dll
+ 72F80000 04/14/2008 13:00:00 C:\WINDOWS\system32\winspool.drv
+ 736E0000 04/14/2008 13:00:00 C:\WINDOWS\system32\DDRAW.dll
+ 73B40000 04/14/2008 13:00:00 C:\WINDOWS\system32\DCIMAN32.dll
+ 746B0000 04/14/2008 13:00:00 C:\WINDOWS\system32\MSCTF.dll
+ 75160000 02/27/2009 05:57:08 C:\WINDOWS\system32\msctfime.ime
+ 76340000 04/14/2008 13:00:00 C:\WINDOWS\system32\IMM32.DLL
+ 76360000 04/14/2008 13:00:00 C:\WINDOWS\system32\comdlg32.dll
+ 770F0000 04/14/2008 13:00:00 C:\WINDOWS\system32\oleaut32.dll
+ 773A0000 04/14/2008 13:00:00
+ C:\WINDOWS\WinSxS\x86_Microsoft.Windows.Common-Controls_6595b64144ccf1df_6.0.
+2600.5512_x-ww_35d4ce83\comctl32.dll
+ 774B0000 04/14/2008 13:00:00 C:\WINDOWS\system32\ole32.dll
+ 77BD0000 04/14/2008 13:00:00 C:\WINDOWS\system32\version.dll
+ 77BE0000 04/14/2008 13:00:00 C:\WINDOWS\system32\msvcrt.dll
+ 77DA0000 02/09/2009 11:52:54 C:\WINDOWS\system32\advapi32.dll
+ 77E50000 04/15/2009 15:54:30 C:\WINDOWS\system32\RPCRT4.dll
+ 77EF0000 10/23/2008 13:36:14 C:\WINDOWS\system32\GDI32.dll
+ 77F40000 12/08/2009 10:24:28 C:\WINDOWS\system32\SHLWAPI.dll
+ 77FC0000 06/25/2009 09:26:46 C:\WINDOWS\system32\Secur32.dll
+ 7C800000 03/21/2009 15:08:18 C:\WINDOWS\system32\kernel32.dll
+ 7C910000 02/09/2009 11:52:54 C:\WINDOWS\system32\ntdll.dll
+ 7E1E0000 04/14/2008 13:00:00 C:\WINDOWS\system32\oledlg.dll
+ 7E390000 04/14/2008 13:00:00 C:\WINDOWS\system32\user32.dll
+ 7E6A0000 06/17/2008 20:02:04 C:\WINDOWS\system32\SHELL32.dll
+==========================================
